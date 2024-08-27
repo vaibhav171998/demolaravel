@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Website\WebsiteController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +20,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// website routes
+Route::get('/electric', [WebsiteController::class, 'electricServices']);
+Route::get('/plumbing', [WebsiteController::class, 'plumbingServices']);
+Route::get('/furniture', [WebsiteController::class, 'furnitureAndPopInterior']);
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -29,3 +36,10 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/run-migration',function (){
+    Artisan::call('optimize:clear');
+    Artisan::call('migrate:fresh --seed');
+
+    return "Migration executed successfully";
+});
